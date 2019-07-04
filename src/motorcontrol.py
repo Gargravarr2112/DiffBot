@@ -18,18 +18,19 @@ p1 = GPIO.PWM(AN1, 100)                     # set pwm for M1, 100Hz
 p2 = GPIO.PWM(AN2, 100)                     # set pwm for M2, 100Hz
 
 speedPercent = 50
+turnSpeed = 50
+
+def turn(left):
+    GPIO.output(DIG2, GPIO.LOW if left else GPIO.HIGH)
+    p2.start(turnSpeed)
+    sleep(0.5)
+    p2.start(0)
 
 def turnLeft():
-	GPIO.output(DIG2, GPIO.LOW)
-	p2.start(speedPercent)
-	sleep(0.5)
-	p2.start(0) #stop
+    turn(True)
 
 def turnRight():
-	GPIO.output(DIG2, GPIO.HIGH)
-	p2.start(speedPercent)
-	sleep(0.5)
-	p2.start(0)
+    turn(False)
 
 def creepForward():
 	GPIO.output(DIG1, GPIO.HIGH)
