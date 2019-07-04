@@ -63,6 +63,8 @@ def driveWASD():
 			currentSpeed += 1 if desiredSpeed > currentSpeed else -1
 			GPIO.output(DIG1, GPIO.HIGH if currentSpeed >= 0 else GPIO.LOW)
 			p1.start(abs(currentSpeed))
+		screen.addstr(5, 2, "Current speed: %d  " % currentSpeed)
+		screen.addstr(6, 2, "Desired speed: %d  " % desiredSpeed)
 		sleep(0.01)
 	curses.echo()
 	curses.nocbreak()
