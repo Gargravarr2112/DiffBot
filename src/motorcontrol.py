@@ -17,70 +17,57 @@ GPIO.setup(DIG1, GPIO.OUT)    # set pin as output
 p1 = GPIO.PWM(AN1, 100)       # set pwm for M1, 100Hz
 p2 = GPIO.PWM(AN2, 100)       # set pwm for M2, 100Hz
 
-speedPercent = 50
+turnSpeed = 50
 
 def turnLeft():
 	GPIO.output(DIG2, GPIO.LOW)
-	p2.start(speedPercent)
+	p2.start(turnSpeed)
 	sleep(0.5)
 	p2.start(0) #stop
 
 def turnRight():
 	GPIO.output(DIG2, GPIO.HIGH)
-	p2.start(speedPercent)
+	p2.start(turnSpeed)
 	sleep(0.5)
 	p2.start(0)
 
-def creepForward():
-	GPIO.output(DIG1, GPIO.HIGH)
-	p1.start(speedPercent)
-	sleep(1)
-	p1.start(0)
-
-def creepBackward():
-	GPIO.output(DIG1, GPIO.LOW)
-	p1.start(speedPercent)
-	sleep(1)
-	p1.start(0)
-
-def driveForward():
-	GPIO.output(DIG1, GPIO.HIGH)
-	p1.start(speedPercent)
-
-def driveBackward():
-	GPIO.output(DIG1, GPIO.LOW)
-	p1.start(speedPercent)
-
-def stop():
-	p1.start(0)
-	p2.start(0)
-
 def driveWASD():
+	currentSpeed = 0
+	desiredSpeed = 0
 	screen = curses.initscr()
 	curses.noecho()
 	curses.cbreak()
 	screen.keypad(True)
+	screen.nodelay(True)
 	screen.insstr("W-A-S-D to drive")
 	while (True):
 		command = screen.getch()
 		if command == ord('w'):
-			stop()
-			driveForward()
+			desiredSpeed += 10
+			if desiredSpeed > 100:
+				desiredSpeed = 100
 		elif command == ord('s'):
-			stop()
-			driveBackward()
+			desiredSpeed -= 10
+			if desiredSpeed < -100:
+				desiredSpeed = -100
 		elif command == ord('a'):
 			turnLeft()
 		elif command == ord('d'):
 			turnRight()
 		elif command == ord('e'):
-			stop()
+			desiredSpeed = 0
 		elif command == ord('q'):
-			stop()
+			p1.start(0)
 			break
+		if currentSpeed != desiredSpeed:
+			currentSpeed += 1 if desiredSpeed > currentSpeed else -1
+			GPIO.output(DIG1, GPIO.HIGH if currentSpeed >= 0 else GPIO.LOW)
+			p1.start(abs(currentSpeed))
+		sleep(0.01)
 	curses.echo()
 	curses.nocbreak()
-	screen.keypad(0)
+	screen.keypad(False)
+	screen.nodelay(False)
 	curses.endwin()
 
 if __name__ == "__main__":
