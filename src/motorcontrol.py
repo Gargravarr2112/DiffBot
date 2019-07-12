@@ -22,7 +22,7 @@ GPIO.setup(DIG1, GPIO.OUT)    # set pin as output
 driveMotor = GPIO.PWM(AN1, PWM_FREQUENCY)       # set pwm for M1, 100Hz
 steeringMotor = GPIO.PWM(AN2, PWM_FREQUENCY)       # set pwm for M2, 100Hz
 
-speedPercent = 50
+defaultSpeedPercent = 50
 
 def turnLeft():
 	GPIO.output(DIG2, GPIO.LOW)
@@ -36,23 +36,23 @@ def turnRight():
 	sleep(0.2)
 	steeringMotor.stop()
 
-def creepForward():
+def inchForward():
 	GPIO.output(DIG1, GPIO.HIGH)
 	driveMotor.start(speedPercent)
 	sleep(1)
 	driveMotor.stop()
 
-def creepBackward():
+def inchBackward():
 	GPIO.output(DIG1, GPIO.LOW)
 	driveMotor.start(speedPercent)
 	sleep(1)
 	driveMotor.stop()
 
-def driveForward():
+def driveForward(speedPercent):
 	GPIO.output(DIG1, GPIO.HIGH)
 	driveMotor.start(speedPercent)
 
-def driveBackward():
+def driveBackward(speedPercent):
 	GPIO.output(DIG1, GPIO.LOW)
 	driveMotor.start(speedPercent)
 
@@ -70,10 +70,10 @@ def driveWASD():
 		command = screen.getch()
 		if command == ord('w'):
 			stop()
-			driveForward()
+			driveForward(defaultSpeedPercent)
 		elif command == ord('s'):
 			stop()
-			driveBackward()
+			driveBackward(defaultSpeedPercent)
 		elif command == ord('a'):
 			turnLeft()
 		elif command == ord('d'):
