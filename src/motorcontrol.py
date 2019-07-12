@@ -23,28 +23,29 @@ driveMotor = GPIO.PWM(AN1, PWM_FREQUENCY)       # set pwm for M1, 100Hz
 steeringMotor = GPIO.PWM(AN2, PWM_FREQUENCY)       # set pwm for M2, 100Hz
 
 defaultSpeedPercent = 50
+steeringSpeedPercent = 75
 
 def turnLeft():
 	GPIO.output(DIG2, GPIO.LOW)
-	steeringMotor.start(speedPercent)
-	sleep(0.2)
+	steeringMotor.start(steeringSpeedPercent)
+	sleep(0.1)
 	steeringMotor.stop()
 
 def turnRight():
 	GPIO.output(DIG2, GPIO.HIGH)
-	steeringMotor.start(speedPercent)
-	sleep(0.2)
+	steeringMotor.start(steeringSpeedPercent)
+	sleep(0.1)
 	steeringMotor.stop()
 
 def inchForward():
 	GPIO.output(DIG1, GPIO.HIGH)
-	driveMotor.start(speedPercent)
+	driveMotor.start(defaultSpeedPercent)
 	sleep(1)
 	driveMotor.stop()
 
 def inchBackward():
 	GPIO.output(DIG1, GPIO.LOW)
-	driveMotor.start(speedPercent)
+	driveMotor.start(defaultSpeedPercent)
 	sleep(1)
 	driveMotor.stop()
 
