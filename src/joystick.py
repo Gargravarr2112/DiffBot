@@ -64,11 +64,14 @@ def driveByGamepad():
 		elif eType == ecodes.EV_KEY: #Button
 			print("Button")
 			if eCode == 304: #Button 1, stop
-				print("Stop")
-				stop()
+				if eValue == 1: #Button down, ignore up
+					print("Stop")
+					stop()
 			elif eCode == 310: #ShoulderL, turn left
-				print("Left")
-				turnLeft()
+				if eValue == 1:
+					print("Left")
+					turnLeft()
 			elif eCode == 311: #ShoulderR, turn right
-				print("Right")
-				turnRight()
+				if eValue == 1:
+					print("Right")
+					turnRight()
