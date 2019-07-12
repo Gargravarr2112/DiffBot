@@ -6,54 +6,59 @@ import curses
 
 GPIO.setmode(GPIO.BCM)
 
+#Uses Cytron HAT-MDD10 2-way motor driver board
+#2x PWM outputs (pins 12 and 13) for motor speed control
+#2x digital outputs (24 and 26) to control motor direction
+
 AN2 = 13        # set pwm2 pin on MD10-Hat
 AN1 = 12        # set pwm1 pin on MD10-hat
 DIG2 = 24       # set dir2 pin on MD10-Hat
 DIG1 = 26       # set dir1 pin on MD10-Hat
+PWM_FREQUENCY = 100
 GPIO.setup(AN2, GPIO.OUT)     # set pin as output
 GPIO.setup(AN1, GPIO.OUT)     # set pin as output
 GPIO.setup(DIG2, GPIO.OUT)    # set pin as output
 GPIO.setup(DIG1, GPIO.OUT)    # set pin as output
-p1 = GPIO.PWM(AN1, 100)       # set pwm for M1, 100Hz
-p2 = GPIO.PWM(AN2, 100)       # set pwm for M2, 100Hz
+driveMotor = GPIO.PWM(AN1, PWM_FREQUENCY)       # set pwm for M1, 100Hz
+steeringMotor = GPIO.PWM(AN2, PWM_FREQUENCY)       # set pwm for M2, 100Hz
 
 speedPercent = 50
 
 def turnLeft():
 	GPIO.output(DIG2, GPIO.LOW)
-	p2.start(speedPercent)
-	sleep(0.5)
-	p2.start(0) #stop
+	steeringMotor.start(speedPercent)
+	sleep(0.2)
+	steeringMotor.stop()
 
 def turnRight():
 	GPIO.output(DIG2, GPIO.HIGH)
-	p2.start(speedPercent)
-	sleep(0.5)
-	p2.start(0)
+	steeringMotor.start(speedPercent)
+	sleep(0.2)
+	steeringMotor.stop()
 
 def creepForward():
 	GPIO.output(DIG1, GPIO.HIGH)
-	p1.start(speedPercent)
+	driveMotor.start(speedPercent)
 	sleep(1)
-	p1.start(0)
+	driveMotor.stop()
 
 def creepBackward():
 	GPIO.output(DIG1, GPIO.LOW)
-	p1.start(speedPercent)
+	driveMotor.start(speedPercent)
 	sleep(1)
-	p1.start(0)
+	driveMotor.stop()
 
 def driveForward():
 	GPIO.output(DIG1, GPIO.HIGH)
-	p1.start(speedPercent)
+	driveMotor.start(speedPercent)
 
 def driveBackward():
 	GPIO.output(DIG1, GPIO.LOW)
-	p1.start(speedPercent)
+	driveMotor.start(speedPercent)
 
 def stop():
-	p1.start(0)
-	p2.start(0)
+	driveMotor.stop()
+	steeringMotor.stop()
 
 def driveWASD():
 	screen = curses.initscr()
