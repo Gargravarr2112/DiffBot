@@ -11,10 +11,6 @@ gamepad = [device for device in [evdev.InputDevice(path) for path in evdev.list_
 
 gamepadCodes = { 0: 'ANALOG_L_X', 1: 'ANALOG_L_Y', 3: 'ANALOG_R_X', 4: 'ANALOG_R_Y', 16: 'DPAD_X', 17: 'DPAD_Y', 304: 'BUTTON_ONE', 305: 'BUTTON_TWO', 307: 'BUTTON_THREE', 308: 'BUTTON_FOUR', 310: 'BUTTON_SHOULDERL', 311: 'BUTTON_SHOULDERR', 314: 'BUTTON_SELECT', 315: 'BUTTON_START', 319: 'BUTTON_PLAY' }
 
-stickMin = 0
-stickMax = 255
-stickZero = 128
-
 if len(gamepad) == 0:
 	print("Could not find gamepad in input device list, is bluetooth connected?")
 	exit()
@@ -75,3 +71,6 @@ def driveByGamepad():
 				if eValue == 1:
 					print("Right")
 					turnRight()
+
+if __name__ == "__main__":
+	driveByGamepad()
